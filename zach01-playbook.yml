@@ -1,0 +1,28 @@
+---
+- name: Our first class example
+  hosts: planet_express
+
+  tasks:
+          - name: Create a directory
+            file:
+                    path: ~/zach_made_this/
+                    state: directory
+
+          - name: Create a file in our new directory
+            file:
+                    path: ~/zach_made_this/break.time
+                    state: touch
+
+          - name: Install a program with yum (RHEL/Centos)
+            yum:
+                    name: httpd
+                    state: latest
+            when: ansible_facts['distribution'] == "CentOS"
+            become: yes
+
+          - name: Install a program with apt (Debian/Ubuntu)
+            apt:
+                    name: apache2
+                    state: latest
+            when: ansible_facts.distribution == "Ubuntu"
+            become: yes
