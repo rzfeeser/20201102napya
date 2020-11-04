@@ -1,0 +1,27 @@
+---
+- name: Palo Alto example
+  hosts: localhost
+  connection: local
+  
+
+  collection:
+          - paloaltonetworks.panos
+
+  vars:
+          # provider is your "creds" to the Palo Alto device
+          provider:
+                  # api_key: str
+                  # ip_address: str (IP of PAN-OS dev to be configured)
+                  # password: str (use this if not using API key)
+                  # port: int (default 443 - access to PAN-OS dev)
+                  # serial_number: str (serial number of a firewall to use for targeted commands.
+                  #                     If "ip_address: is not a Panorama PAN-OS device, 
+                  #                     then this param is ignored.
+                  # username: str (used if "api_key" is omitted)
+
+  tasks:
+          - name: Configure and enable BGP
+            panos_bgp:
+                    provider: '{{ provider }}'
+                    router_id: '1.1.1.1'
+                    local_as: '64512'
