@@ -1,5 +1,5 @@
 ---
-- name: Using EOS specific module to run commands
+- name: Using cli_command agnostic modules
   hosts: arista_switches
   gather_facts: false
   connection: network_cli    # required for ansible to use CLI over SSH 
@@ -33,11 +33,3 @@
           - name: take a peek at "just" the JSON returned to the command "show interfaces"
             debug:
                     var: results.results[1]
-
-          - name: display the IP of the switch
-            debug:
-                    var: results.results[1].stdout_lines[2].split()[3]
-
-          - name: create a var on the fly
-            set_fact:
-                    switchip: "{{ results.results[1].stdout_lines[2].split()[3] }}"

@@ -1,0 +1,8 @@
+Link Summary for NASA Mars Photos:
+RUN identifier: {{ ansible_date_time.iso8601_basic_short }}
+
+Cool Mars Rover Links for Exploration Date {{ sol }}:
+-----------------------------------------------------
+{% for link in marsphotolist %}
+  {{ link.img_src }}
+{% endfor %}

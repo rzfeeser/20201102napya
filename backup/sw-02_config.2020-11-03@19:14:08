@@ -1,0 +1,30 @@
+! Command: show running-config
+! device: napya-5078-sw-02 (vEOS, EOS-4.22.0F)
+!
+! boot system flash:/vEOS-lab.swi
+!
+transceiver qsfp default-mode 4x10G
+!
+hostname napya-5078-sw-02
+!
+spanning-tree mode mstp
+!
+no aaa root
+!
+username admin role network-admin secret sha512 $6$Q4ruCZgpAILe3aQH$AG/HAeueo7k.oo34x29iOhp9qdld8mHNA/rNMSHH4tvkcAgNUFQnMSZ08k5iZRdISHVqCu1rZVbLT5sxwsBF5/
+!
+interface Management1
+   ip address dhcp
+   dhcp client accept default-route
+!
+no ip routing
+!
+banner login
+this is my login banner
+that contains a multiline
+string
+if this works correctly
+we should never see the banner
+EOF
+!
+end

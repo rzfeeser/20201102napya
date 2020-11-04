@@ -1,0 +1,73 @@
+---
+- name: A playbook to interact with NASA APIs
+  hosts: localhost
+  connection: local
+  
+  vars:
+          nasa_api_key: T4NfmMPxcEIR1nlEpEShJvh0ZoRBEsEzwIguKkYb
+          nasamarsapi: "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
+          sol: 1000
+
+
+  tasks:
+          # Make an HTTP request to NASA
+          # ansible-doc ansible.builtin.uri
+          - name: Utilize the URI module to make a custom HTTP(S) request
+            ansible.builtin.uri:
+                    method: GET
+                    url: "{{ nasamarsapi }}?sol={{ sol }}&api_key={{ nasa_api_key }}"
+            register: results
+
+          # debug results that come back so we can find structure in the response
+          - name: Display results
+            debug:
+                    var: results.json.photos    # [0].img_src
+                    verbosity: 1
+
+
+          - name: set fact to make our data easier to work with
+            set_fact:
+                    marsphotolist: "{{ results.json.photos }}"
+
+                    #          - name: Display all Mars Camera URLS
+                    #            debug:
+                    #                    var: item.img_src
+                    #                    verbosity: 1
+                    #            loop: "{{ marsphotolist }}"
+
+          - debug:
+                  var: ansible_date_time.date
+                  verbosity: 1
+
+          # create a directory to store results in
+          - name: create a directory to store work in
+            file:
+                    state: directory
+                    path: nasamars/
+          
+          # create sub-directory with some kind of timestamp
+          # orgazation to store resutls in
+          - name: create a sub directory to store work in
+            file:
+                    state: directory
+                    path: nasamars/{{ ansible_date_time.iso8601_basic_short }}/
+
+          # write URLs into some kind of template (summary report of pics we can DL)
+          - name: use a Jinja template to summarize our links
+            template:
+                    src: linksummary.txt.j2
+                    dest: nasamars/{{ ansible_date_time.iso8601_basic_short }}/linksummary.txt
+          
+          # use ansible to grab content from all URLs
+          - name: "download all the mars rover photos for sol day {{ sol }}"
+            ansible.builtin.get_url:
+                    url: "{{ item.img_src }}"
+                    dest: nasamars/{{ ansible_date_time.iso8601_basic_short }}/
+            loop: "{{ marsphotolist }}"
+                    
+          # rescue logic, where if something fails,
+          # we remove any of the incomplete work / downloads / summary report
+          
+          # use stat module to ensure files were downloaded properly
+
+          # do NOT let the world see the NASA key required to make requests
