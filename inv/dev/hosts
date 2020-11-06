@@ -1,11 +1,6 @@
-[planet_express]
-bender    ansible_host=10.10.2.3 ansible_user=bender zachvar=theinstructor
-fry       ansible_host=10.10.2.4 ansible_user=fry
-zoidberg  ansible_host=10.10.2.5 ansible_user=zoidberg ansible_ssh_pass=alta3
-farnsworth ansible_host=10.10.2.6 ansible_user=farnsworth ansible_python_interpreter=/usr/bin/python ansible_ssh_pass=alta3
-
-[planet_express:vars]
-ansible_python_interpreter=/usr/bin/python3
+[nyp_switches:children]
+arista_switches
+cisco_switches
 
 
 
@@ -16,19 +11,27 @@ sw-02
 [arista_switches:vars]
 ansible_network_os=eos
 ansible_user=admin
-;;ansible_ssh_pass=alta37up
+ansible_ssh_pass=alta3
 
 
-[ciscoswitches]
-; description of our cisco ~/mycode/inventory
+[cisco_switches]
 cisco1      ansible_host=192.168.0.1
 cisco2      ansible_host=192.168.0.2
     
-[ciscoswitches:vars]
+[cisco_switches:vars]
 ; variables specific to cisco switches
 ansible_network_os=ios
 ansible_user=admin
 ansible_ssh_pass=ciscoskeerit123
+
+[cisco_asa]
+ciscoasa1	ansible_host=192.168.3.2
+ciscoasa2	ansible_host=192.168.4.5
+
+[cisco_asa:vars]
+ansible_network_os=asa
+ansible_user=admin
+ansible_ssh_pass=ciscoasaseekrit
 
 
 [aristaswitchessecure]

@@ -1,6 +1,6 @@
 ---
 - name: Playbook with the register keyword
-  hosts: planet_express
+  hosts: fry
 
   tasks:      
   - name: "Issue a trivial command"

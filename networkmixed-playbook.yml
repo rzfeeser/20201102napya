@@ -1,0 +1,38 @@
+- name: Mixed playbook
+  hosts: nyp_switches
+  connection: network_cli
+  gather_facts: false
+
+  vars:
+          
+
+  tasks:
+          - name: Precheck Operation - Backup Config
+            block:
+                    # this will define many common return values, such as ansible_net_config
+                    - name: gather facts on arista devices
+                      arista.eos.eos_facts:
+                              gather_subset:
+                                      - config
+                      when: ansible_network_os == 'eos'
+
+
+                    # this will define many common return values, such as ansible_net_config
+                    - name: gather facts on cisco ios devices
+                      cisco.ios.ios_facts:
+                              gather_subset:
+                                      - config
+                      when: ansible_network_os == 'ios'
+
+                    # this will define many common return values, such as ansible_net_config
+                    - name: Gather only the config and default facts
+                      cisco.asa.asa_facts:
+                              gather_subset:
+                                      - config
+                      when: ansible_network_os == 'asa'
+
+                    # copy out backup to local machine
+                    - name: backup current config of switches
+                      copy:
+                              content: "{{ ansible_net_config }}"                           # this came from *_facts modules
+                              dest: "~/mycode/backup/{{ inventory_hostname }}-backup.txt"   # on controller
