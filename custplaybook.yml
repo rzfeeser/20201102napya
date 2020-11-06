@@ -2,6 +2,9 @@
 - name: Using our new module
   hosts: localhost
 
+  collections:
+          - buzzaldrin.apollo
+
   tasks:
   - name: New module
     my_new_test_module:
